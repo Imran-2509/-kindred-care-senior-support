@@ -1,0 +1,1759 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#145c53">
+  <meta name="description" content="Kindred Care is a compassionate frontend platform for senior citizen companionship, weekly wellbeing check-ins, everyday assistance, and 24/7 nighttime helpline reassurance.">
+  <title>Kindred Care | Senior Companion &amp; Helpline Support Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #20332f;
+      --muted: #71827c;
+      --line: #e5ece7;
+      --paper: #f6f8f5;
+      --white: #fff;
+      --green: #195e54;
+      --green-dark: #12483f;
+      --green-soft: #e8f2ed;
+      --mint: #dcece4;
+      --peach: #fff0e8;
+      --gold: #fff5dd;
+      --lilac: #f0edfa;
+      --danger: #b74f4b;
+      --danger-soft: #fdf1f0;
+      --shadow: 0 12px 36px rgba(34, 70, 58, 0.055);
+      --radius: 18px;
+      --scale: 1;
+    }
+
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      font-size: calc(14px * var(--scale));
+    }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid #9bcabb;
+      outline-offset: 2px;
+    }
+
+    /* App Shell Layout */
+    .app-shell { min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 256px;
+      background: #143f39;
+      color: #eaf3ef;
+      padding: 24px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+      overflow-y: auto;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 9px;
+      color: inherit;
+      text-decoration: none;
+      margin-bottom: 34px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: #dceee5;
+      color: #175d51;
+      border-radius: 14px;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .brand strong { font: 800 1.15rem Manrope, sans-serif; letter-spacing: -0.7px; display: block; }
+    .brand small { font-size: 0.6rem; letter-spacing: 1.8px; color: #a5c4b8; }
+
+    .sidebar-caption { font-size: 0.62rem; letter-spacing: 1.7px; color: #83a99b; font-weight: 700; padding: 0 11px 10px; }
+    .second-caption { margin-top: 22px; }
+    .nav-list { display: grid; gap: 5px; }
+    .nav-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      color: #c7d9d1;
+      padding: 11px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: 0.18s;
+    }
+    .nav-link:hover, .nav-link.active { background: #285b51; color: white; }
+    .nav-icon { width: 19px; text-align: center; font-size: 1.05rem; }
+    .nav-count {
+      margin-left: auto;
+      background: #376d61;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+    }
+
+    .sidebar-bottom { margin-top: auto; padding-top: 22px; display: grid; gap: 8px; }
+    .sidebar-care-card {
+      border: 1px solid #37675d;
+      background: #204f46;
+      border-radius: 15px;
+      padding: 14px;
+    }
+    .care-card-icon { font-size: 1.2rem; margin-bottom: 6px; }
+    .sidebar-care-card strong { font: 700 0.82rem Manrope, sans-serif; display: block; }
+    .sidebar-care-card p { font-size: 0.7rem; color: #c1d7ce; line-height: 1.5; margin: 4px 0 10px; }
+    .sidebar-help-button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #7fa99a;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.06);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .sidebar-help-button:hover { background: rgba(255,255,255,0.14); }
+    .sidebar-foot { font-size: 0.62rem; color: #a0bdb2; line-height: 1.6; padding: 8px 6px 0; }
+    .sidebar-foot span { color: #6f9788; }
+
+    /* Main Area */
+    .main-area { margin-left: 256px; max-width: 1800px; padding: 0 clamp(20px, 3.5vw, 50px) 24px; }
+    .topbar {
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid #e8ede9;
+      margin-bottom: 26px;
+    }
+    .topbar-left, .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .top-eyebrow, .eyebrow { font-size: 0.62rem; letter-spacing: 1.8px; font-weight: 700; color: #438174; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.76rem; color: #8b9993; margin-top: 2px; }
+    .breadcrumb b { font-weight: 400; color: #c0cbc5; }
+    .breadcrumb strong { color: #354b44; font-weight: 700; }
+
+    /* Topbar Controls & Accessibility */
+    .a11y-group {
+      display: inline-flex;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .a11y-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 4px 8px;
+      border-radius: 7px;
+    }
+    .a11y-btn.active { background: var(--green-soft); color: var(--green); }
+
+    .today-chip, .coordinator-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      color: #60736b;
+    }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #6ea78c; }
+    .coordinator-avatar { height: 26px; width: 26px; border-radius: 8px; background: #dceee5; color: #245e52; display: grid; place-items: center; font-size: 0.65rem; font-weight: 800; }
+    
+    .toolbar-button {
+      border: 1px solid #dfe9e3;
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 11px;
+      color: #42695a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .toolbar-button:hover { background: #edf5f0; }
+    .toolbar-button.quiet { background: transparent; color: #89978f; }
+    .toolbar-button.helpline-btn { background: var(--danger-soft); border-color: #f3cbc8; color: var(--danger); }
+    .mobile-menu { display: none; border: 1px solid var(--line); background: white; border-radius: 9px; padding: 8px 10px; color: var(--green); }
+
+    /* Pages & Hero */
+    .page { display: none; animation: fadein 0.25s ease; }
+    .page.active { display: block; }
+    @keyframes fadein { from { opacity: 0.45; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .welcome-banner {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 230px;
+      padding: 32px 38px;
+      border-radius: 22px;
+      background: linear-gradient(112deg, #17584e, #347b69);
+      color: white;
+    }
+    .welcome-copy { position: relative; z-index: 2; max-width: 570px; }
+    .eyebrow.light { color: #b7d8c9; }
+    .welcome-banner h1 { font: 800 clamp(1.7rem, 2.8vw, 2.4rem)/1.16 Manrope, sans-serif; letter-spacing: -1.2px; margin: 10px 0; }
+    .welcome-banner p { color: #d2e6dc; max-width: 470px; margin: 0; font-size: 0.85rem; }
+    .welcome-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; padding: 10px 14px; font-size: 0.78rem; font-weight: 700; transition: 0.18s; text-decoration: none; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--green); color: white; }
+    .btn-primary:hover { background: #124a42; }
+    .btn-light { background: #f6fcf8; color: #18594f; }
+    .btn-outline-light { background: transparent; color: white; border: 1px solid #a5c8b8; }
+    .btn-text { background: transparent; color: #667a71; }
+    .btn-danger { background: #b94e4b; color: white; }
+    .btn-sm { padding: 7px 11px; font-size: 0.74rem; }
+
+    .welcome-art {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 220px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.075);
+      display: grid;
+      place-items: center;
+    }
+    .sun-orbit { position: absolute; width: 135px; height: 135px; border: 1px solid rgba(235,255,242,.3); border-radius: 50%; }
+    .art-heart { width: 92px; height: 92px; border-radius: 32px; background: #d5ebdc; color: #216b59; display: grid; place-items: center; font-size: 58px; transform: rotate(-8deg); box-shadow: 0 15px 35px #133f3640; }
+    .art-leaf { position: absolute; color: #d2e9d8; font-size: 26px; }
+    .leaf-one { right: 24px; top: 24px; }
+    .leaf-two { left: 30px; bottom: 18px; }
+    .art-caption { position: absolute; right: -16px; bottom: 16px; font: 800 0.6rem/1.3 Manrope; letter-spacing: 1.2px; color: #b9d8ca; transform: rotate(-8deg); }
+
+    /* Dashboard & Stats */
+    .section-heading, .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+    .section-heading { margin: 26px 0 14px; }
+    .section-heading h2, .page-heading h1 { font: 800 1.4rem/1.2 Manrope, sans-serif; letter-spacing: -0.7px; margin: 4px 0; }
+    .section-heading p, .page-heading p { font-size: 0.78rem; color: var(--muted); margin: 0; }
+    .date-note { font-size: 0.72rem; color: #8c9a94; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 13px; }
+    .stat-card, .surface-card { background: white; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 4px 14px rgba(34,70,58,.025); }
+    .stat-card { position: relative; padding: 16px 18px; min-height: 120px; }
+    .stat-icon { position: absolute; right: 16px; top: 16px; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 1rem; }
+    .icon-green { background: var(--green-soft); color: #347563; }
+    .icon-lilac { background: var(--lilac); color: #7165a1; }
+    .icon-gold { background: var(--gold); color: #a77b2e; }
+    .icon-peach { background: var(--peach); color: #bf7757; }
+    .stat-label { color: #73837c; font-size: 0.72rem; font-weight: 600; padding-right: 35px; }
+    .stat-value { font: 800 1.75rem Manrope; letter-spacing: -1px; margin: 10px 0 0; }
+    .stat-foot { font-size: 0.68rem; color: #97a39e; margin-top: 2px; }
+
+    /* Priority Alert Box */
+    .priority-alert {
+      background: #fff9f2;
+      border: 1px solid #f3dec9;
+      border-left: 4px solid #d97706;
+      border-radius: 13px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .priority-alert strong { color: #92400e; font-size: 0.8rem; display: block; }
+    .priority-alert p { margin: 2px 0 0; font-size: 0.72rem; color: #78350f; }
+
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .85fr); gap: 15px; margin-top: 15px; }
+    .surface-card { padding: 19px; min-width: 0; }
+    .card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px; }
+    .card-heading h3 { font: 700 0.95rem Manrope; letter-spacing: -0.3px; margin: 0; }
+    .card-heading p { font-size: 0.72rem; color: #899790; margin: 3px 0 0; }
+    .subtle-link { border: 0; background: transparent; color: #347868; font-size: 0.72rem; font-weight: 700; padding: 4px; }
+    .icon-button { border: 1px solid var(--line); background: white; color: var(--green); height: 30px; width: 30px; border-radius: 9px; }
+
+    .activity-list { display: grid; }
+    .activity-item { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eff3f0; }
+    .activity-item:first-child { border-top: 0; padding-top: 0; }
+    .activity-symbol { flex: 0 0 32px; height: 32px; border-radius: 10px; background: #f0f6f2; display: grid; place-items: center; }
+    .activity-text { flex: 1; min-width: 0; }
+    .activity-text strong { font-size: 0.75rem; display: block; }
+    .activity-text p { font-size: 0.7rem; color: #899790; margin: 2px 0 0; line-height: 1.45; }
+    .activity-date { white-space: nowrap; font-size: 0.68rem; color: #a0aaa5; }
+
+    .dashboard-side { display: grid; gap: 13px; align-content: start; }
+    .support-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .support-tiles > div { border: 1px solid #edf1ee; border-radius: 11px; padding: 10px; display: grid; grid-template-columns: 24px 1fr auto; gap: 5px; align-items: center; }
+    .support-tiles span { font-size: 0.9rem; }
+    .support-tiles label { font-size: 0.7rem; color: #718078; }
+    .support-tiles b { font: 700 0.88rem Manrope; }
+
+    .gentle-reminder { display: flex; gap: 11px; padding: 14px; background: #edf5f0; border: 1px solid #e1eee6; border-radius: 15px; }
+    .reminder-icon { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 9px; background: white; color: #387c68; display: grid; place-items: center; }
+    .gentle-reminder strong { font: 700 0.78rem Manrope; }
+    .gentle-reminder p { font-size: 0.7rem; color: #6f8178; line-height: 1.5; margin: 3px 0 0; }
+
+    .notice-strip { display: flex; align-items: center; gap: 10px; background: #fff8ed; border: 1px solid #f1e8d9; border-radius: 12px; padding: 11px 13px; margin-top: 14px; color: #896c44; }
+    .notice-strip > span { font-size: 1rem; }
+    .notice-strip p { flex: 1; font-size: 0.72rem; line-height: 1.5; margin: 0; }
+    .notice-strip button { border: 0; background: transparent; color: #8a6533; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+
+    /* Forms & Layouts */
+    .page-heading { margin: 4px 0 20px; }
+    .page-heading h1 { font-size: 1.7rem; letter-spacing: -0.9px; }
+    .page-symbol { height: 46px; width: 46px; display: grid; place-items: center; border-radius: 15px; background: var(--green-soft); color: #3a806b; font-size: 1.4rem; flex: 0 0 46px; }
+
+    .two-column-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 15px; align-items: start; }
+    .senior-layout { grid-template-columns: minmax(0, 1.08fr) minmax(330px, .92fr); }
+    .match-layout { grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr); }
+    .checkin-layout, .request-layout { grid-template-columns: minmax(0, 1fr) minmax(340px, .95fr); }
+    
+    .form-card { padding: 20px; }
+    .step-pill, .demo-badge { font-size: 0.6rem; letter-spacing: 1px; color: #4a826e; background: #edf5f0; border-radius: 30px; padding: 5px 8px; white-space: nowrap; font-weight: 800; }
+    .demo-badge { color: #8d754c; background: #fff6e7; }
+    
+    .form-section-label { font: 800 0.66rem Manrope; letter-spacing: 1.3px; color: #4b8775; margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #edf2ee; }
+    .form-section-label:first-of-type { margin-top: 2px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: grid; gap: 5px; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label, .checkbox-field legend { font-size: 0.74rem; font-weight: 700; color: #52675d; }
+    .field label i { font-style: normal; color: #bf735c; }
+    .field input:not([type=checkbox]), .field select, .field textarea {
+      width: 100%; border: 1px solid #dfe8e2; border-radius: 9px; background: #fcfdfc; padding: 10px 11px; color: var(--ink); font-size: 0.78rem; min-width: 0; outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #7cad9b; box-shadow: 0 0 0 3px #e9f4ee; }
+    .field textarea { resize: vertical; line-height: 1.5; }
+    .field small { font-size: 0.68rem; color: #99a49f; }
+    
+    .checkbox-field { border: 0; padding: 0; margin: 0; min-width: 0; }
+    .checkbox-field legend { padding: 0; margin-bottom: 8px; }
+    .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .choice-grid label { font-weight: 500; cursor: pointer; }
+    .choice-grid input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .choice-grid span { display: block; border: 1px solid #e3ebe6; border-radius: 9px; padding: 8px; font-size: 0.72rem; color: #64756c; background: #fff; transition: .15s; }
+    .choice-grid input:checked + span { border-color: #8bb9a5; background: #eff7f2; color: #24634f; }
+    
+    .consent-line { display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; color: #718179; font-size: 0.72rem; line-height: 1.45; }
+    .consent-line input { margin-top: 2px; accent-color: var(--green); }
+    .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 7px; margin-top: 16px; }
+
+    /* Lists & Cards */
+    .list-card { padding: 19px; }
+    .count-badge { min-width: 27px; height: 27px; padding: 0 8px; display: grid; place-items: center; background: #eef5f0; color: #347563; border-radius: 10px; font-size: 0.74rem; font-weight: 800; }
+    .search-wrap { height: 37px; border: 1px solid var(--line); border-radius: 9px; display: flex; align-items: center; gap: 8px; padding: 0 10px; margin-bottom: 12px; color: #8b9a92; }
+    .search-wrap input { border: 0; outline: 0; min-width: 0; flex: 1; font-size: 0.76rem; color: var(--ink); background: transparent; }
+    
+    .stack-list { display: grid; gap: 9px; }
+    .person-card, .log-card, .request-card, .contact-card { border: 1px solid #e8eee9; border-radius: 12px; padding: 12px; display: flex; gap: 10px; align-items: flex-start; background: #fff; }
+    .person-avatar { height: 36px; width: 36px; flex: 0 0 36px; border-radius: 11px; background: #e8f2ec; color: #35735f; display: grid; place-items: center; font: 800 0.8rem Manrope; }
+    .person-content { flex: 1; min-width: 0; }
+    .person-name { font-size: 0.82rem; font-weight: 800; color: #2c4038; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .person-meta { font-size: 0.72rem; color: #8a9891; line-height: 1.5; margin-top: 3px; overflow-wrap: anywhere; }
+    .person-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+    
+    .tag { display: inline-flex; align-items: center; border-radius: 30px; padding: 3px 7px; background: #edf5f0; color: #477966; font-size: 0.66rem; font-weight: 700; }
+    .tag.gray { background: #f0f3f1; color: #78867f; }
+    .tag.amber { background: #fff4e4; color: #a37835; }
+    .tag.coral { background: #fff0eb; color: #b66c54; }
+    
+    .card-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .mini-action { border: 1px solid #e2ebe5; background: white; color: #547267; border-radius: 7px; padding: 5px 8px; font-size: 0.7rem; font-weight: 700; text-decoration: none; }
+    .mini-action:hover { background: #eef6f1; }
+    .mini-action:disabled { opacity: 0.6; cursor: default; }
+    .mini-action.danger { color: #b65f58; }
+
+    .empty-state { border: 1px dashed #dbe6df; border-radius: 12px; padding: 24px 15px; text-align: center; color: #91a098; }
+    .empty-state > span { display: block; font-size: 1.5rem; color: #79a48f; }
+    .empty-state strong { display: block; color: #587165; font-size: 0.82rem; margin-top: 6px; }
+    .empty-state p { font-size: 0.72rem; margin: 4px 0 0; line-height: 1.5; }
+
+    /* Companion Matching */
+    .match-intro { display: flex; gap: 13px; align-items: center; padding: 14px 17px; border: 1px solid #dcebe2; background: #edf6f0; border-radius: 14px; margin-bottom: 14px; }
+    .match-intro-icon { height: 35px; width: 35px; flex: 0 0 35px; border-radius: 11px; background: #fff; color: #347761; display: grid; place-items: center; font-size: 1.1rem; }
+    .match-intro strong { font: 700 0.82rem Manrope; }
+    .match-intro p { font-size: 0.72rem; color: #6f8278; line-height: 1.5; margin: 3px 0 0; }
+    
+    .match-results { margin-top: 13px; display: grid; gap: 9px; }
+    .match-result { border: 1px solid #e4ece6; border-radius: 12px; padding: 12px; background: #fff; }
+    .match-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+    .match-person { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .match-score { font: 800 1.15rem Manrope; color: #347661; }
+    .match-meter { height: 5px; background: #edf2ee; border-radius: 9px; overflow: hidden; margin-top: 9px; }
+    .match-meter span { height: 100%; display: block; background: #68a486; border-radius: 9px; }
+    .match-reasons { font-size: 0.72rem; color: #819188; line-height: 1.55; margin-top: 7px; }
+    .assigned-banner { margin-top: 11px; background: #f0f7f1; color: #477661; padding: 9px 11px; border-radius: 9px; font-size: 0.74rem; font-weight: 600; }
+
+    /* Check-ins & Assistance Board */
+    .filter-row { display: flex; gap: 7px; margin-bottom: 12px; }
+    .filter-row select { min-width: 0; flex: 1; border: 1px solid var(--line); background: white; border-radius: 8px; padding: 8px; font-size: 0.73rem; color: #61756b; }
+    .log-note { font-size: 0.74rem; color: #66786e; line-height: 1.55; margin-top: 7px; }
+    .log-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+
+    .request-card { display: block; }
+    .request-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+    .request-title { font-size: 0.82rem; font-weight: 800; }
+    .request-desc { font-size: 0.74rem; color: #75857c; line-height: 1.55; margin: 7px 0; }
+    .request-meta { font-size: 0.69rem; color: #99a59e; }
+    .request-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #edf2ee; padding-top: 8px; margin-top: 9px; }
+
+    /* Safety & Helpline */
+    .safety-hero { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 25px; border-radius: 17px; background: linear-gradient(110deg, #18584e, #347b69); color: white; margin-bottom: 15px; flex-wrap: wrap; }
+    .safety-hero-left { display: flex; align-items: center; gap: 15px; max-width: 700px; }
+    .safety-hero-icon { width: 52px; height: 52px; flex: 0 0 52px; display: grid; place-items: center; border-radius: 16px; background: rgba(255,255,255,0.15); font-size: 1.6rem; }
+    .safety-hero h2 { font: 800 1.2rem/1.25 Manrope; margin: 4px 0; }
+    .safety-hero p { font-size: 0.76rem; line-height: 1.55; color: #d4e6dc; margin: 0; }
+    
+    .safety-layout { grid-template-columns: 1fr 1fr; }
+    .safety-steps { display: grid; gap: 0; }
+    .safety-steps label { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; border-top: 1px solid #edf2ee; cursor: pointer; }
+    .safety-steps label:first-child { border-top: 0; padding-top: 0; }
+    .safety-steps input { margin-top: 3px; accent-color: var(--green); }
+    .safety-steps b { display: block; font-size: 0.78rem; }
+    .safety-steps small { display: block; font-size: 0.7rem; color: #8d9a92; margin-top: 2px; }
+    .safety-steps input:checked + span b { text-decoration: line-through; color: #82958a; }
+
+    .emergency-guidance { display: flex; gap: 11px; padding: 15px; border-radius: 13px; border: 1px solid #f1e2d4; background: #fff8f0; margin-top: 15px; color: #87663d; }
+    .guidance-symbol { font-size: 1.15rem; }
+    .emergency-guidance strong { font-size: 0.8rem; }
+    .emergency-guidance p { font-size: 0.72rem; line-height: 1.55; margin: 3px 0 0; }
+
+    /* Modals */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(18,40,34,0.62); backdrop-filter: blur(3px); z-index: 80; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-backdrop.open { display: flex; }
+    .modal-box { background: white; border-radius: 20px; width: min(640px, 100%); max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(16,42,35,0.28); border: 1px solid var(--line); }
+    .modal-head { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .modal-head.danger-head { background: var(--danger-soft); border-bottom-color: #f4d2cf; }
+    .modal-head h3 { margin: 0; font: 800 1.02rem Manrope; }
+    .modal-close { border: 1px solid var(--line); background: white; width: 32px; height: 32px; border-radius: 9px; font-weight: 700; }
+    .modal-body { padding: 20px 22px; display: grid; gap: 14px; }
+
+    /* Breathing Orb & Paramedic Card */
+    .breathe-card { background: #edf6f1; border: 1px solid #d5e8de; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 14px; }
+    .breathe-orb { width: 46px; height: 46px; border-radius: 50%; background: var(--green); color: white; display: grid; place-items: center; font-size: 0.62rem; font-weight: 800; flex-shrink: 0; animation: breathePulse 6s infinite ease-in-out; }
+    @keyframes breathePulse { 0%, 100% { transform: scale(0.88); background: #2d7a69; } 50% { transform: scale(1.08); background: #144d43; } }
+    
+    .paramedic-card { background: #f9fbf9; border: 1px solid #dce6df; border-radius: 13px; padding: 13px; font-size: 0.76rem; }
+    .paramedic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .paramedic-grid div strong { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--muted); }
+
+    /* Footer & Toast */
+    .app-footer { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #e8ede9; margin-top: 28px; padding: 15px 2px 0; font-size: 0.7rem; color: #8b9891; }
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: #194f45; color: white; border-radius: 10px; padding: 12px 16px; box-shadow: var(--shadow); font-size: 0.76rem; opacity: 0; transform: translateY(10px); pointer-events: none; transition: .22s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .confirm-dialog { border: 0; border-radius: 17px; padding: 0; width: min(390px, calc(100% - 32px)); box-shadow: 0 22px 70px #1d3f3433; }
+    .confirm-dialog::backdrop { background: #1d332b77; }
+    .confirm-dialog form { padding: 22px; }
+    .dialog-icon { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 11px; background: #fff2e9; color: #b16d48; font-weight: 800; }
+    .confirm-dialog h3 { font: 800 0.98rem Manrope; margin: 13px 0 5px; }
+    .confirm-dialog p { font-size: 0.76rem; color: #7b8b82; line-height: 1.55; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 18px; }
+    .mobile-scrim { display: none; }
+
+    @media(max-width:1200px) {
+      .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .welcome-art { right: 3%; }
+      .senior-layout, .match-layout { grid-template-columns: minmax(0, 1fr) minmax(300px, .9fr); }
+    }
+    @media(max-width:900px) {
+      .sidebar { transform: translateX(-100%); transition: transform .25s ease; box-shadow: 16px 0 36px #0c2e2633; }
+      .sidebar.open { transform: translateX(0); }
+      .main-area { margin-left: 0; padding: 0 20px 20px; }
+      .mobile-menu { display: block; }
+      .mobile-scrim.show { display: block; position: fixed; inset: 0; background: #132c2466; z-index: 25; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width:700px) {
+      .two-column-layout, .senior-layout, .match-layout, .checkin-layout, .request-layout, .safety-layout { grid-template-columns: 1fr; }
+      .welcome-art { display: none; }
+      .form-grid { grid-template-columns: 1fr; }
+      .choice-grid { grid-template-columns: 1fr; }
+      .paramedic-grid { grid-template-columns: 1fr; }
+      .app-footer { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#page-overview" data-navigate="overview">
+        <span class="brand-mark" aria-hidden="true">♡</span>
+        <span><strong>kindred care</strong><small>COMPANION DESK</small></span>
+      </a>
+      <div class="sidebar-caption">WORKSPACE</div>
+      <nav class="nav-list">
+        <button class="nav-link active" data-page="overview"><span class="nav-icon">⌂</span> Overview</button>
+        <button class="nav-link" data-page="seniors"><span class="nav-icon">♧</span> Senior profiles</button>
+        <button class="nav-link" data-page="matching"><span class="nav-icon">♡</span> Companion matching</button>
+        <button class="nav-link" data-page="checkins"><span class="nav-icon">◷</span> Weekly check-ins</button>
+        <button class="nav-link" data-page="requests"><span class="nav-icon">▤</span> Help requests <span class="nav-count" id="nav-open-count">0</span></button>
+      </nav>
+
+      <div class="sidebar-caption second-caption">CARE &amp; SAFETY</div>
+      <nav class="nav-list">
+        <button class="nav-link" data-page="safety"><span class="nav-icon">✚</span> Safety &amp; helpline</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-care-card">
+          <div class="care-card-icon">☏</div>
+          <strong>Night-time reassurance</strong>
+          <p>Calming breathing guide, paramedic medical card, and trusted contacts.</p>
+          <button type="button" id="sidebar-open-helpline" class="sidebar-help-button">24/7 Helpline Desk <span>→</span></button>
+        </div>
+        <div class="sidebar-foot">A little care can make a big difference.<br><span>Community Care Workspace</span></div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <div>
+            <div class="top-eyebrow">COMMUNITY CARE WORKSPACE</div>
+            <div class="breadcrumb"><span>Kindred Care</span><b>/</b><strong id="current-section">Overview</strong></div>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="a11y-group" role="group" aria-label="Text size adjustment">
+            <button type="button" class="a11y-btn active" data-scale="1" title="Standard text size">A</button>
+            <button type="button" class="a11y-btn" data-scale="1.12" title="Large text size">A+</button>
+            <button type="button" class="a11y-btn" data-scale="1.24" title="Extra large text size">A++</button>
+          </div>
+
+          <button class="toolbar-button helpline-btn" id="topbar-helpline-btn" type="button">☏ 24/7 Helpline</button>
+          <div class="today-chip"><span class="online-dot"></span><span id="today-label">Today</span></div>
+          <button class="toolbar-button" id="export-data" type="button" title="Export local JSON backup">↓ Export</button>
+          <button class="toolbar-button quiet" id="reset-demo" type="button" title="Restore sample data">Reset</button>
+          <div class="coordinator-chip"><span class="coordinator-avatar">CC</span><span>Coordinator</span></div>
+        </div>
+      </header>
+
+      <!-- OVERVIEW PAGE -->
+      <section class="page active" id="page-overview" aria-labelledby="overview-title">
+        <div class="welcome-banner">
+          <div class="welcome-copy">
+            <div class="eyebrow light">A COMMUNITY CARE SPACE</div>
+            <h1 id="overview-title">A caring connection<br>starts with a check-in.</h1>
+            <p>Pair lonely seniors living alone with student volunteer companions for weekly check-ins, digital healthcare appointments, grocery support, and nighttime reassurance.</p>
+            <div class="welcome-actions">
+              <button class="btn btn-light" data-page="seniors">＋ Register a senior</button>
+              <button class="btn btn-outline-light" data-page="matching">Find a companion <span>→</span></button>
+            </div>
+          </div>
+          <div class="welcome-art" aria-hidden="true">
+            <div class="sun-orbit"></div>
+            <div class="art-heart">♡</div>
+            <div class="art-leaf leaf-one">✿</div>
+            <div class="art-leaf leaf-two">❋</div>
+            <div class="art-caption">CARE THAT<br>CONNECTS</div>
+          </div>
+        </div>
+
+        <div id="priority-alert-container"></div>
+
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">YOUR CARE CIRCLE</div>
+            <h2>Community at a glance</h2>
+            <p>A live snapshot of senior profiles, volunteer matches, check-in logs, and support requests.</p>
+          </div>
+          <span class="date-note" id="dashboard-date"></span>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-icon icon-green">♧</div>
+            <div class="stat-label">Registered seniors</div>
+            <div class="stat-value" id="stat-seniors">0</div>
+            <div class="stat-foot">People in your care circle</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon icon-lilac">♡</div>
+            <div class="stat-label">Student companions</div>
+            <div class="stat-value" id="stat-volunteers">0</div>
+            <div class="stat-foot">Verified student pool</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon icon-gold">◷</div>
+            <div class="stat-label">Weekly check-ins</div>
+            <div class="stat-value" id="stat-checkins">0</div>
+            <div class="stat-foot">Wellbeing touchpoints recorded</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon icon-peach">▤</div>
+            <div class="stat-label">Open help requests</div>
+            <div class="stat-value" id="stat-open">0</div>
+            <div class="stat-foot">Tasks awaiting completion</div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="surface-card activity-card">
+            <div class="card-heading">
+              <div>
+                <h3>Recent care activity</h3>
+                <p>Latest check-ins and community support updates</p>
+              </div>
+              <button class="subtle-link" data-page="checkins">View check-ins →</button>
+            </div>
+            <div id="recent-activity" class="activity-list"></div>
+          </article>
+
+          <div class="dashboard-side">
+            <article class="surface-card">
+              <div class="card-heading">
+                <div>
+                  <h3>Support queue</h3>
+                  <p>Active requests by category</p>
+                </div>
+                <button class="icon-button" data-page="requests" aria-label="Open help requests">↗</button>
+              </div>
+              <div class="support-tiles">
+                <div><span>💊</span><label>Medication</label><b id="mini-med">0</b></div>
+                <div><span>🥬</span><label>Groceries</label><b id="mini-grocery">0</b></div>
+                <div><span>📱</span><label>Digital help</label><b id="mini-digital">0</b></div>
+                <div><span>🧾</span><label>Utility bills</label><b id="mini-utility">0</b></div>
+              </div>
+            </article>
+
+            <article class="gentle-reminder">
+              <div class="reminder-icon">✦</div>
+              <div>
+                <strong>Small moments matter</strong>
+                <p>A weekly conversation helps a senior living alone feel heard, included, and supported.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="notice-strip">
+          <span>ⓘ</span>
+          <p><strong>Local Storage Active:</strong> All entered profiles, check-ins, and support requests are automatically saved in your browser with no backend server required.</p>
+          <button data-page="safety">Safety desk →</button>
+        </div>
+      </section>
+
+      <!-- SENIOR PROFILES PAGE -->
+      <section class="page" id="page-seniors" aria-labelledby="seniors-title">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">KNOW THE PERSON, NOT JUST THE NEED</div>
+            <h1 id="seniors-title">Senior citizen profiles</h1>
+            <p>Keep essential preferences, medical conditions, and support needs together to make care more personal.</p>
+          </div>
+          <span class="page-symbol">♧</span>
+        </div>
+
+        <div class="two-column-layout senior-layout">
+          <article class="surface-card form-card">
+            <div class="card-heading">
+              <div>
+                <h3 id="senior-form-title">Register a senior</h3>
+                <p>Fields marked with * are required.</p>
+              </div>
+              <span class="step-pill">01 / PROFILE</span>
+            </div>
+
+            <form id="senior-form">
+              <input type="hidden" id="senior-edit-id">
+              <div class="form-section-label">Personal details</div>
+              <div class="form-grid">
+                <div class="field"><label for="senior-name">Full name <i>*</i></label><input id="senior-name" name="name" required maxlength="70" placeholder="e.g. Meera Sharma"></div>
+                <div class="field"><label for="senior-age">Age <i>*</i></label><input id="senior-age" name="age" type="number" min="60" max="115" required placeholder="60 or above"></div>
+                <div class="field"><label for="senior-phone">Phone number</label><input id="senior-phone" name="phone" type="tel" maxlength="20" placeholder="Contact number"></div>
+                <div class="field"><label for="senior-area">City / area <i>*</i></label><input id="senior-area" name="area" required maxlength="80" placeholder="Neighbourhood or city"></div>
+                <div class="field full"><label for="senior-languages">Languages spoken <i>*</i></label><input id="senior-languages" name="languages" required placeholder="Hindi, Punjabi, English"><small>Separate languages with commas.</small></div>
+              </div>
+
+              <div class="form-section-label">Care preferences</div>
+              <div class="form-grid">
+                <div class="field full"><label for="senior-conditions">Medical conditions / health notes</label><textarea id="senior-conditions" name="conditions" rows="3" placeholder="Optional information relevant to support."></textarea></div>
+                <div class="field full"><label for="senior-hobbies">Hobby interests <i>*</i></label><input id="senior-hobbies" name="hobbies" required placeholder="Gardening, music, books, walking"><small>Interests are used to suggest compatible student companions.</small></div>
+                <fieldset class="field full checkbox-field">
+                  <legend>Assistance needs</legend>
+                  <div class="choice-grid" id="senior-needs">
+                    <label><input type="checkbox" value="Companionship / weekly calls"><span>♡ Companionship / weekly calls</span></label>
+                    <label><input type="checkbox" value="Grocery support"><span>🥬 Grocery support</span></label>
+                    <label><input type="checkbox" value="Medication delivery"><span>💊 Medication delivery</span></label>
+                    <label><input type="checkbox" value="Utility bill payment"><span>🧾 Utility bill payment</span></label>
+                    <label><input type="checkbox" value="Digital smartphone tutoring"><span>📱 Digital smartphone tutoring</span></label>
+                    <label><input type="checkbox" value="Appointment navigation"><span>🗓 Appointment navigation</span></label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="form-section-label">Night-time safety contact</div>
+              <div class="form-grid">
+                <div class="field"><label for="senior-contact-name">Emergency contact name</label><input id="senior-contact-name" maxlength="70" placeholder="Family member / trusted contact"></div>
+                <div class="field"><label for="senior-contact-phone">Emergency contact phone</label><input id="senior-contact-phone" type="tel" maxlength="20" placeholder="Include area code"></div>
+                <div class="field full"><label for="senior-contact-relation">Relationship / notes</label><input id="senior-contact-relation" maxlength="100" placeholder="e.g. Daughter · prefers evening calls"></div>
+              </div>
+
+              <label class="consent-line">
+                <input id="senior-consent" type="checkbox" required>
+                <span>I confirm permission to save this senior profile locally in this browser.</span>
+              </label>
+
+              <div class="form-actions">
+                <button class="btn btn-text" type="reset" id="senior-cancel">Clear form</button>
+                <button class="btn btn-primary" type="submit" id="senior-submit">Save senior profile <span>→</span></button>
+              </div>
+            </form>
+          </article>
+
+          <article class="surface-card list-card">
+            <div class="card-heading">
+              <div>
+                <h3>Registered seniors</h3>
+                <p id="senior-count-label">Your care circle</p>
+              </div>
+              <span class="count-badge" id="senior-count">0</span>
+            </div>
+            <div class="search-wrap">
+              <span>⌕</span>
+              <input id="senior-search" type="search" placeholder="Search name, area or language" aria-label="Search senior profiles">
+            </div>
+            <div id="senior-list" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- COMPANION MATCHING PAGE -->
+      <section class="page" id="page-matching" aria-labelledby="matching-title">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">SHARED LANGUAGE. SHARED INTERESTS. REAL CONNECTION.</div>
+            <h1 id="matching-title">Companion matching</h1>
+            <p>Find student volunteers whose communication style and interests overlap with a senior's.</p>
+          </div>
+          <span class="page-symbol">♡</span>
+        </div>
+
+        <div class="match-intro">
+          <div class="match-intro-icon">✧</div>
+          <div>
+            <strong>How the weighted matching score works</strong>
+            <p>Language compatibility contributes up to 60 points (30 pts per shared language) and shared hobbies contribute up to 40 points (20 pts per shared hobby).</p>
+          </div>
+        </div>
+
+        <div class="two-column-layout match-layout">
+          <article class="surface-card">
+            <div class="card-heading">
+              <div>
+                <h3>Find a companion</h3>
+                <p>Choose a senior to calculate compatible matches.</p>
+              </div>
+              <span class="step-pill">02 / CONNECT</span>
+            </div>
+            <div class="field">
+              <label for="match-senior">Select senior citizen</label>
+              <select id="match-senior"><option value="">Choose a senior</option></select>
+            </div>
+            <div class="assigned-banner" id="assigned-banner" hidden></div>
+            <div id="match-output" class="match-results"></div>
+          </article>
+
+          <article class="surface-card">
+            <div class="card-heading">
+              <div>
+                <h3>Student volunteer pool</h3>
+                <p>Verified student companions ready for weekly support.</p>
+              </div>
+              <span class="demo-badge">VERIFIED POOL</span>
+            </div>
+            <div id="volunteer-list" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- WEEKLY CHECK-INS PAGE -->
+      <section class="page" id="page-checkins" aria-labelledby="checkins-title">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">A GENTLE WEEKLY TOUCHPOINT</div>
+            <h1 id="checkins-title">Companion check-ins</h1>
+            <p>Record the conversation, emotional well-being, telehealth support, and physical health status after each call.</p>
+          </div>
+          <span class="page-symbol">◷</span>
+        </div>
+
+        <div class="two-column-layout checkin-layout">
+          <article class="surface-card form-card">
+            <div class="card-heading">
+              <div>
+                <h3>New weekly call log</h3>
+                <p>Capture a respectful summary and any follow-up.</p>
+              </div>
+              <span class="step-pill">03 / CHECK IN</span>
+            </div>
+
+            <form id="checkin-form">
+              <div class="form-grid">
+                <div class="field full"><label for="log-senior">Senior citizen <i>*</i></label><select id="log-senior" required><option value="">Choose a senior</option></select></div>
+                <div class="field"><label for="log-volunteer">Companion <i>*</i></label><select id="log-volunteer" required><option value="">Choose a companion</option></select></div>
+                <div class="field"><label for="log-date">Call date <i>*</i></label><input id="log-date" type="date" required></div>
+                <div class="field"><label for="log-duration">Call duration</label><select id="log-duration"><option>10–15 minutes</option><option>15–30 minutes</option><option>30–45 minutes</option><option>45+ minutes</option></select></div>
+                <div class="field"><label for="log-telehealth">Digital healthcare help</label><select id="log-telehealth"><option>None needed today</option><option>Booked / joined telehealth call</option><option>Reviewed digital prescription</option><option>Needs smartphone tutoring</option></select></div>
+                <div class="field"><label for="log-emotion">Emotional wellbeing <i>*</i></label><select id="log-emotion" required><option value="">Select status</option><option>Bright and engaged</option><option>Doing okay</option><option>Feeling lonely</option><option>Anxious or worried</option><option>Low mood</option></select></div>
+                <div class="field"><label for="log-health">Physical health status <i>*</i></label><select id="log-health" required><option value="">Select status</option><option>Feeling well</option><option>Usual condition / stable</option><option>Minor discomfort</option><option>Needs follow-up</option><option>Urgent concern reported</option></select></div>
+                <div class="field full"><label for="log-notes">Call notes <i>*</i></label><textarea id="log-notes" rows="4" required placeholder="What did you talk about? What follow-up was agreed?"></textarea></div>
+                <div class="field full"><label for="log-followup">Follow-up needed</label><select id="log-followup"><option>No follow-up noted</option><option>Check in again this week</option><option>Coordinate an assistance request</option><option>Notify designated care contact</option></select></div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-text" type="reset">Clear form</button>
+                <button class="btn btn-primary" type="submit">Save call log <span>→</span></button>
+              </div>
+            </form>
+          </article>
+
+          <article class="surface-card list-card">
+            <div class="card-heading">
+              <div>
+                <h3>Recent call logs</h3>
+                <p>Most recent conversations first.</p>
+              </div>
+              <span class="count-badge" id="log-total">0</span>
+            </div>
+            <div class="filter-row">
+              <select id="log-filter-senior" aria-label="Filter logs by senior"><option value="All">All seniors</option></select>
+            </div>
+            <div id="checkin-list" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- HELP REQUESTS PAGE -->
+      <section class="page" id="page-requests" aria-labelledby="requests-title">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">PRACTICAL HELP, COORDINATED WITH CARE</div>
+            <h1 id="requests-title">Assistance request board</h1>
+            <p>Post everyday tasks and track them from open to completed.</p>
+          </div>
+          <span class="page-symbol">▤</span>
+        </div>
+
+        <div class="two-column-layout request-layout">
+          <article class="surface-card form-card">
+            <div class="card-heading">
+              <div>
+                <h3>Create a help request</h3>
+                <p>Describe the support a senior needs.</p>
+              </div>
+              <span class="step-pill">04 / SUPPORT</span>
+            </div>
+
+            <form id="request-form">
+              <div class="form-grid">
+                <div class="field full"><label for="req-senior">Senior citizen <i>*</i></label><select id="req-senior" required><option value="">Choose a senior</option></select></div>
+                <div class="field"><label for="req-type">Type of assistance <i>*</i></label><select id="req-type" required><option value="">Choose support</option><option>Medication delivery</option><option>Grocery support</option><option>Utility bill payment</option><option>Digital smartphone tutoring</option><option>Appointment navigation</option><option>Other practical support</option></select></div>
+                <div class="field"><label for="req-priority">Priority <i>*</i></label><select id="req-priority" required><option>Routine</option><option>Time-sensitive</option><option>High priority</option></select></div>
+                <div class="field full"><label for="req-details">What support is needed? <i>*</i></label><textarea id="req-details" rows="4" required placeholder="Describe the task, preferred time and practical details."></textarea></div>
+                <div class="field"><label for="req-due">Preferred date</label><input id="req-due" type="date"></div>
+                <div class="field"><label for="req-contact">Best contact time</label><select id="req-contact"><option>Any time</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-text" type="reset">Clear form</button>
+                <button class="btn btn-primary" type="submit">Post request <span>→</span></button>
+              </div>
+            </form>
+          </article>
+
+          <article class="surface-card list-card">
+            <div class="card-heading">
+              <div>
+                <h3>Community support queue</h3>
+                <p>Update each task as it is handled.</p>
+              </div>
+              <span class="count-badge" id="request-total">0</span>
+            </div>
+            <div class="filter-row">
+              <select id="request-filter" aria-label="Filter requests by status">
+                <option value="All">All statuses</option>
+                <option value="Open">Open</option>
+                <option value="In progress">In progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <select id="type-filter" aria-label="Filter requests by category">
+                <option value="All">All categories</option>
+                <option>Medication delivery</option>
+                <option>Grocery support</option>
+                <option>Utility bill payment</option>
+                <option>Digital smartphone tutoring</option>
+                <option>Appointment navigation</option>
+                <option>Other practical support</option>
+              </select>
+            </div>
+            <div id="request-list" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- SAFETY & HELPLINE PAGE -->
+      <section class="page" id="page-safety" aria-labelledby="safety-title">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">PEACE OF MIND, DAY AND NIGHT</div>
+            <h1 id="safety-title">Safety &amp; helpline desk</h1>
+            <p>Keep trusted contacts visible and understand what to do if an urgent situation occurs.</p>
+          </div>
+          <span class="page-symbol">✚</span>
+        </div>
+
+        <div class="safety-hero">
+          <div class="safety-hero-left">
+            <div class="safety-hero-icon">☏</div>
+            <div>
+              <div class="eyebrow light">24/7 REASSURANCE &amp; ESCALATION</div>
+              <h2>Feeling anxious or unwell at night?</h2>
+              <p>Open the calming helpline desk for a guided breathing prompt, quick-call buttons for trusted family contacts, and an instant paramedic medical summary card.</p>
+            </div>
+          </div>
+          <button type="button" id="safety-launch-modal" class="btn btn-light">Open 24/7 Helpline Modal <span>→</span></button>
+        </div>
+
+        <div class="two-column-layout safety-layout">
+          <article class="surface-card">
+            <div class="card-heading">
+              <div>
+                <h3>Trusted emergency contacts</h3>
+                <p>Contacts entered in a senior's profile appear here.</p>
+              </div>
+              <span class="step-pill">05 / SAFETY</span>
+            </div>
+            <div id="safety-contacts" class="stack-list"></div>
+          </article>
+
+          <article class="surface-card safety-checklist">
+            <div class="card-heading">
+              <div>
+                <h3>Night-time readiness checklist</h3>
+                <p>Use this as a planning prompt with the senior and family.</p>
+              </div>
+            </div>
+            <div class="safety-steps">
+              <label><input type="checkbox" data-safety-check="contact"><span><b>Trusted contact is up to date</b><small>Confirm the phone number and availability.</small></span></label>
+              <label><input type="checkbox" data-safety-check="address"><span><b>Home address is easy to share</b><small>Keep the location details accessible to the senior.</small></span></label>
+              <label><input type="checkbox" data-safety-check="medication"><span><b>Medication information is accessible</b><small>Keep prescriptions and clinician instructions in their safe place.</small></span></label>
+              <label><input type="checkbox" data-safety-check="plan"><span><b>Emergency plan has been discussed</b><small>Agree who to contact and how to reach professional help.</small></span></label>
+            </div>
+          </article>
+        </div>
+
+        <div class="emergency-guidance">
+          <div class="guidance-symbol">ⓘ</div>
+          <div>
+            <strong>If someone may be experiencing a medical emergency</strong>
+            <p>Do not wait for a companion callback or a request-board update. Contact local emergency services immediately (112 / 108 / 911), follow responder instructions, and alert the senior's trusted contact when safe.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <span>Kindred Care · Elderly Senior Citizen Care Companion &amp; Helpline Support System</span>
+        <span>Interactive Frontend Solution · LocalStorage Persisted</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- 24/7 Calming Nighttime Helpline Modal -->
+  <div class="modal-backdrop" id="helpline-modal" role="dialog" aria-modal="true" aria-labelledby="helpline-modal-title">
+    <div class="modal-box">
+      <div class="modal-head danger-head">
+        <h3 id="helpline-modal-title" style="color:#9f3a36;">☏ 24/7 Nighttime Care &amp; Reassurance Desk</h3>
+        <button type="button" class="modal-close" data-close-modal="helpline-modal" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="breathe-card">
+          <div class="breathe-orb">BREATHE</div>
+          <div>
+            <strong style="font-size:0.84rem; color:#18584e;">You are not alone. Take one slow breath.</strong>
+            <p style="margin:2px 0 0; font-size:0.72rem; color:#4f6b60;">Inhale gently for 4 seconds, hold for 2, exhale for 4. Choose an option below to connect immediately.</p>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <a href="tel:112" class="btn btn-danger">🚑 Call Emergency Services (112)</a>
+          <button type="button" id="simulate-care-call" class="btn btn-primary">🎧 Connect On-Call Care Desk</button>
+        </div>
+
+        <div id="care-call-status" hidden style="background:#eef7f2; border:1px solid #cde4d7; padding:11px 13px; border-radius:11px; font-size:0.76rem; color:#1d5c49;"></div>
+
+        <div class="paramedic-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <strong>Paramedic &amp; Responder Quick Profile</strong>
+            <select id="helpline-senior-select" style="border:1px solid #d4e0d8; border-radius:8px; padding:5px 8px; font-size:0.72rem;"></select>
+          </div>
+          <div id="helpline-paramedic-details" class="paramedic-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-scrim" id="mobile-scrim"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog class="confirm-dialog" id="confirm-dialog">
+    <form method="dialog">
+      <div class="dialog-icon">!</div>
+      <h3 id="confirm-title">Please confirm</h3>
+      <p id="confirm-message">Are you sure?</p>
+      <div class="dialog-actions">
+        <button class="btn btn-text" value="cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-action" value="confirm">Continue</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    'use strict';
+
+    const STORAGE_KEY = 'kindred-care-data-v2';
+    const SCALE_KEY = 'kindred-care-font-scale';
+
+    const VOLUNTEERS = [
+      { id: 'v1', name: 'Aarav Mehta', study: 'Nursing student · Year 3', area: 'North Campus', languages: ['Hindi', 'English', 'Punjabi'], interests: ['music', 'walking', 'gardening'] },
+      { id: 'v2', name: 'Simran Kaur', study: 'Psychology student · Year 2', area: 'City Campus', languages: ['Punjabi', 'Hindi', 'English'], interests: ['books', 'cooking', 'music'] },
+      { id: 'v3', name: 'Riya Nair', study: 'Social work student · Year 4', area: 'West Campus', languages: ['English', 'Hindi', 'Malayalam'], interests: ['gardening', 'books', 'art'] },
+      { id: 'v4', name: 'Kabir Singh', study: 'Computer science student · Year 2', area: 'North Campus', languages: ['Punjabi', 'English', 'Hindi'], interests: ['technology', 'chess', 'walking'] },
+      { id: 'v5', name: 'Ananya Das', study: 'Public health student · Year 3', area: 'East Campus', languages: ['Hindi', 'English', 'Bengali'], interests: ['music', 'yoga', 'cooking'] },
+      { id: 'v6', name: 'Dev Patel', study: 'Information technology student · Year 2', area: 'City Campus', languages: ['Hindi', 'Gujarati', 'English'], interests: ['technology', 'photography', 'chess'] }
+    ];
+
+    const SAMPLE_DATA = {
+      seniors: [
+        { id: 's1', name: 'Meera Sharma', age: 72, phone: '+91 98140 22109', area: 'Sector 21', languages: ['Hindi', 'Punjabi'], conditions: 'Mild hypertension; prefers a gentle pace during walks.', hobbies: ['gardening', 'music'], needs: ['Grocery support', 'Companionship / weekly calls'], contactName: 'Neha Sharma', contactPhone: '+91 98140 22110', contactRelation: 'Daughter' },
+        { id: 's2', name: 'Harjit Singh', age: 68, phone: '+91 98765 43210', area: 'Sector 18', languages: ['Punjabi', 'English'], conditions: 'Uses reading glasses; appreciates help joining video calls.', hobbies: ['chess', 'books'], needs: ['Digital smartphone tutoring', 'Appointment navigation'], contactName: 'Gurpreet Singh', contactPhone: '+91 98765 43211', contactRelation: 'Son' },
+        { id: 's3', name: 'Fatima Begum', age: 76, phone: '+91 98155 77889', area: 'Phase 3B2', languages: ['Hindi', 'English'], conditions: 'Knee arthritis; regular monthly pharmacy refill required.', hobbies: ['cooking', 'music'], needs: ['Medication delivery', 'Companionship / weekly calls'], contactName: 'Tariq Ahmed', contactPhone: '+91 98155 77890', contactRelation: 'Nephew' }
+      ],
+      checkins: [
+        { id: 'c1', seniorId: 's1', volunteerId: 'v1', date: '2026-11-16', duration: '15–30 minutes', telehealth: 'None needed today', emotion: 'Doing okay', health: 'Usual condition / stable', notes: 'Enjoyed talking about balcony plants and confirmed grocery items.', followup: 'Coordinate an assistance request' },
+        { id: 'c2', seniorId: 's2', volunteerId: 'v4', date: '2026-11-14', duration: '10–15 minutes', telehealth: 'Booked / joined telehealth call', emotion: 'Bright and engaged', health: 'Feeling well', notes: 'Practised saving an emergency contact on speed dial.', followup: 'No follow-up noted' }
+      ],
+      requests: [
+        { id: 'r1', seniorId: 's1', type: 'Grocery support', priority: 'Routine', details: 'Help prepare and deliver a weekly fresh grocery list.', due: '2026-11-20', contact: 'Morning', status: 'Open', created: '2026-11-17' },
+        { id: 'r2', seniorId: 's2', type: 'Digital smartphone tutoring', priority: 'Time-sensitive', details: 'Practise joining a video appointment and adjusting phone volume.', due: '2026-11-19', contact: 'Afternoon', status: 'In progress', created: '2026-11-17' },
+        { id: 'r3', seniorId: 's3', type: 'Medication delivery', priority: 'High priority', details: 'Coordinate monthly pharmacy prescription delivery with family contact.', due: '2026-11-19', contact: 'Morning', status: 'Open', created: '2026-11-18' }
+      ],
+      assignments: { s1: 'v1', s2: 'v4' },
+      safetyChecks: { contact: false, address: false, medication: false, plan: false }
+    };
+
+    let state = loadState();
+    let toastTimer;
+
+    function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return clone(SAMPLE_DATA);
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.seniors) && Array.isArray(parsed.checkins) && Array.isArray(parsed.requests)) {
+          return {
+            seniors: parsed.seniors,
+            checkins: parsed.checkins,
+            requests: parsed.requests,
+            assignments: parsed.assignments && typeof parsed.assignments === 'object' ? parsed.assignments : {},
+            safetyChecks: parsed.safetyChecks && typeof parsed.safetyChecks === 'object' ? parsed.safetyChecks : clone(SAMPLE_DATA.safetyChecks)
+          };
+        }
+      } catch (error) {
+        console.warn('Saved Kindred Care data could not be loaded:', error);
+      }
+      return clone(SAMPLE_DATA);
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        return true;
+      } catch (error) {
+        showToast('This browser could not save the changes. Check storage settings.');
+        return false;
+      }
+    }
+
+    function $(id) { return document.getElementById(id); }
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+    }
+
+    function normalise(value) { return String(value || '').trim().toLocaleLowerCase(); }
+    function splitList(value) { return String(value || '').split(',').map(item => item.trim()).filter(Boolean); }
+
+    function todayISO() {
+      const date = new Date();
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatDate(value) {
+      if (!value) return 'Not set';
+      const date = new Date(`${value}T00:00:00`);
+      return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function initials(name) { return String(name || '?').trim().split(/\s+/).slice(0, 2).map(part => part[0] || '').join('').toUpperCase(); }
+    function seniorById(id) { return state.seniors.find(item => item.id === id); }
+    function volunteerById(id) { return VOLUNTEERS.find(item => item.id === id); }
+    function selectedNeeds() { return [...document.querySelectorAll('#senior-needs input:checked')].map(input => input.value); }
+
+    function showToast(message) {
+      const toast = $('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function applyFontScale(scale) {
+      document.documentElement.style.setProperty('--scale', scale);
+      localStorage.setItem(SCALE_KEY, scale);
+      document.querySelectorAll('.a11y-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.scale === String(scale));
+      });
+    }
+
+    function go(page) {
+      const target = document.getElementById(`page-${page}`);
+      if (!target) return;
+      document.querySelectorAll('.page').forEach(section => section.classList.toggle('active', section === target));
+      document.querySelectorAll('.nav-link').forEach(button => button.classList.toggle('active', button.dataset.page === page));
+      $('current-section').textContent = ({ overview: 'Overview', seniors: 'Senior profiles', matching: 'Companion matching', checkins: 'Weekly check-ins', requests: 'Help requests', safety: 'Safety & helpline' })[page] || 'Overview';
+      closeMobileNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (page === 'matching') renderMatches();
+    }
+
+    function openMobileNav() {
+      $('sidebar').classList.add('open');
+      $('mobile-scrim').classList.add('show');
+      $('mobile-menu').setAttribute('aria-expanded', 'true');
+    }
+    function closeMobileNav() {
+      $('sidebar').classList.remove('open');
+      $('mobile-scrim').classList.remove('show');
+      $('mobile-menu').setAttribute('aria-expanded', 'false');
+    }
+
+    function openModal(id) {
+      const modal = $(id);
+      if (!modal) return;
+      if (id === 'helpline-modal') renderHelplineModal();
+      modal.classList.add('open');
+    }
+    function closeModal(id) {
+      const modal = $(id);
+      if (modal) modal.classList.remove('open');
+    }
+
+    function askConfirm(title, message, actionLabel = 'Continue') {
+      return new Promise(resolve => {
+        const dialog = $('confirm-dialog');
+        $('confirm-title').textContent = title;
+        $('confirm-message').textContent = message;
+        $('confirm-action').textContent = actionLabel;
+        const finish = () => {
+          dialog.removeEventListener('close', finish);
+          resolve(dialog.returnValue === 'confirm');
+        };
+        dialog.addEventListener('close', finish);
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+        else resolve(window.confirm(message));
+      });
+    }
+
+    function refreshSelect(id, records, placeholder, selectedValue) {
+      const select = $(id);
+      if (!select) return;
+      const oldValue = selectedValue ?? select.value;
+      select.innerHTML = `<option value="">${escapeHTML(placeholder)}</option>` + records.map(record => `<option value="${escapeHTML(record.id)}">${escapeHTML(record.name)}</option>`).join('');
+      if (records.some(record => record.id === oldValue)) select.value = oldValue;
+    }
+
+    function renderAll() {
+      $('today-label').textContent = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+      $('dashboard-date').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+      renderDashboard();
+      renderSeniors();
+      renderVolunteerPool();
+      refreshSelect('match-senior', state.seniors, 'Choose a senior');
+      refreshSelect('log-senior', state.seniors, 'Choose a senior');
+      refreshSelect('req-senior', state.seniors, 'Choose a senior');
+      refreshSelect('log-volunteer', VOLUNTEERS, 'Choose a companion');
+      
+      const logFilter = $('log-filter-senior');
+      const previousLogFilter = logFilter.value || 'All';
+      logFilter.innerHTML = '<option value="All">All seniors</option>' + state.seniors.map(senior => `<option value="${escapeHTML(senior.id)}">${escapeHTML(senior.name)}</option>`).join('');
+      logFilter.value = previousLogFilter === 'All' || state.seniors.some(senior => senior.id === previousLogFilter) ? previousLogFilter : 'All';
+      
+      renderMatches();
+      renderCheckins();
+      renderRequests();
+      renderSafety();
+    }
+
+    function renderDashboard() {
+      const openRequests = state.requests.filter(request => request.status !== 'Completed');
+      $('stat-seniors').textContent = state.seniors.length;
+      $('stat-volunteers').textContent = VOLUNTEERS.length;
+      $('stat-checkins').textContent = state.checkins.length;
+      $('stat-open').textContent = openRequests.length;
+      $('nav-open-count').textContent = openRequests.length;
+
+      const categories = {
+        'Medication delivery': 'mini-med',
+        'Grocery support': 'mini-grocery',
+        'Digital smartphone tutoring': 'mini-digital',
+        'Utility bill payment': 'mini-utility'
+      };
+      Object.entries(categories).forEach(([category, id]) => {
+        $(id).textContent = openRequests.filter(request => request.type === category).length;
+      });
+
+      /* Priority Alert Check */
+      const flaggedLogs = state.checkins.filter(c => ['Anxious or worried', 'Low mood', 'Feeling lonely'].includes(c.emotion));
+      const urgentReqs = openRequests.filter(r => r.priority === 'High priority');
+      const alertBox = $('priority-alert-container');
+      if (flaggedLogs.length || urgentReqs.length) {
+        alertBox.innerHTML = `
+          <div class="priority-alert">
+            <div>
+              <strong>⚠ Priority Attention Flagged</strong>
+              <p>${urgentReqs.length ? `${urgentReqs.length} high-priority support task(s) open.` : ''} ${flaggedLogs.length ? `${flaggedLogs.length} recent check-in(s) noted emotional concern.` : ''}</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" data-page="${urgentReqs.length ? 'requests' : 'checkins'}">View details →</button>
+          </div>`;
+        alertBox.querySelector('button').addEventListener('click', () => go(urgentReqs.length ? 'requests' : 'checkins'));
+      } else {
+        alertBox.innerHTML = '';
+      }
+
+      const activity = [];
+      state.checkins.forEach(log => {
+        const senior = seniorById(log.seniorId);
+        const volunteer = volunteerById(log.volunteerId);
+        activity.push({ date: log.date, symbol: '◷', title: `Weekly check-in · ${senior?.name || 'Senior'}`, detail: `${volunteer?.name || 'Companion'} · ${log.emotion} · ${log.health}` });
+      });
+      state.requests.forEach(request => {
+        const senior = seniorById(request.seniorId);
+        activity.push({ date: request.created, symbol: '▤', title: `${request.type} · ${senior?.name || 'Senior'}`, detail: `${request.priority} · ${request.status}` });
+      });
+      activity.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      $('recent-activity').innerHTML = activity.length ? activity.slice(0, 5).map(item => `
+        <div class="activity-item"><div class="activity-symbol">${item.symbol}</div><div class="activity-text"><strong>${escapeHTML(item.title)}</strong><p>${escapeHTML(item.detail)}</p></div><time class="activity-date">${escapeHTML(formatDate(item.date))}</time></div>`).join('') : emptyState('No activity yet', 'Add a senior profile, check-in or assistance request to get started.');
+    }
+
+    function emptyState(title, description) {
+      return `<div class="empty-state"><span>♡</span><strong>${escapeHTML(title)}</strong><p>${escapeHTML(description)}</p></div>`;
+    }
+
+    function renderSeniors() {
+      const query = normalise($('senior-search').value);
+      const filtered = state.seniors.filter(senior => [senior.name, senior.area, ...(senior.languages || [])].some(value => normalise(value).includes(query)));
+      $('senior-count').textContent = state.seniors.length;
+      $('senior-count-label').textContent = `${state.seniors.length} ${state.seniors.length === 1 ? 'profile' : 'profiles'} in your care circle`;
+      $('senior-list').innerHTML = filtered.length ? filtered.map(senior => {
+        const assignedVol = volunteerById(state.assignments[senior.id]);
+        return `
+        <article class="person-card">
+          <div class="person-avatar">${escapeHTML(initials(senior.name))}</div>
+          <div class="person-content">
+            <div class="person-name">
+              ${escapeHTML(senior.name)} <span class="tag gray">${escapeHTML(senior.age)} yrs</span>
+              ${assignedVol ? `<span class="tag">Paired: ${escapeHTML(assignedVol.name)}</span>` : ''}
+            </div>
+            <div class="person-meta">${escapeHTML(senior.area)} · Speaks: ${escapeHTML((senior.languages || []).join(', '))}</div>
+            <div class="person-meta">Needs: ${escapeHTML((senior.needs || []).join(', ') || 'Not specified')}</div>
+            <div class="person-tags">${(senior.hobbies || []).slice(0, 4).map(item => `<span class="tag">${escapeHTML(item)}</span>`).join('')}</div>
+            <div class="card-actions">
+              <button class="mini-action" data-edit-senior="${escapeHTML(senior.id)}">Edit profile</button>
+              <button class="mini-action" data-match-senior="${escapeHTML(senior.id)}">Find companion</button>
+              <button class="mini-action danger" data-delete-senior="${escapeHTML(senior.id)}">Remove</button>
+            </div>
+          </div>
+        </article>`;
+      }).join('') : emptyState(query ? 'No matching profiles' : 'No seniors registered', query ? 'Try another name, area or language.' : 'Register a senior using the form to begin your care circle.');
+    }
+
+    function renderVolunteerPool() {
+      $('volunteer-list').innerHTML = VOLUNTEERS.map(volunteer => `
+        <article class="person-card">
+          <div class="person-avatar">${escapeHTML(initials(volunteer.name))}</div>
+          <div class="person-content">
+            <div class="person-name">${escapeHTML(volunteer.name)} <span class="tag">Verified</span></div>
+            <div class="person-meta">${escapeHTML(volunteer.study)}<br>${escapeHTML(volunteer.area)} · ${escapeHTML(volunteer.languages.join(', '))}</div>
+            <div class="person-tags">${volunteer.interests.map(interest => `<span class="tag gray">${escapeHTML(interest)}</span>`).join('')}</div>
+          </div>
+        </article>`).join('');
+    }
+
+    function scoreMatch(senior, volunteer) {
+      const languages = senior.languages.filter(language => volunteer.languages.some(candidate => normalise(candidate) === normalise(language)));
+      const interests = senior.hobbies.filter(hobby => volunteer.interests.some(candidate => normalise(candidate) === normalise(hobby)));
+      const languagePoints = Math.min(60, languages.length * 30);
+      const interestPoints = Math.min(40, interests.length * 20);
+      return { score: languagePoints + interestPoints, languages, interests, languagePoints, interestPoints };
+    }
+
+    function renderMatches() {
+      const seniorId = $('match-senior').value;
+      const senior = seniorById(seniorId);
+      const output = $('match-output');
+      const banner = $('assigned-banner');
+      if (!senior) {
+        banner.hidden = true;
+        output.innerHTML = emptyState('Ready to make a connection?', 'Select a senior to see student volunteers with shared languages and interests.');
+        return;
+      }
+      const assigned = volunteerById(state.assignments[senior.id]);
+      banner.hidden = !assigned;
+      banner.textContent = assigned ? `Current paired companion: ${assigned.name}. You can pair a different volunteer below.` : '';
+      const results = VOLUNTEERS.map(volunteer => ({ volunteer, ...scoreMatch(senior, volunteer) })).sort((a, b) => b.score - a.score || a.volunteer.name.localeCompare(b.volunteer.name));
+      output.innerHTML = results.map(result => {
+        const isAssigned = state.assignments[senior.id] === result.volunteer.id;
+        const languageText = result.languages.length ? `Shared languages: ${result.languages.join(', ')}` : 'No shared language';
+        const interestText = result.interests.length ? `Shared hobbies: ${result.interests.join(', ')}` : 'No shared hobbies';
+        return `
+          <article class="match-result">
+            <div class="match-top">
+              <div class="match-person">
+                <div class="person-avatar">${escapeHTML(initials(result.volunteer.name))}</div>
+                <div>
+                  <div class="person-name">${escapeHTML(result.volunteer.name)} ${isAssigned ? '<span class="tag">Paired</span>' : ''}</div>
+                  <div class="person-meta">${escapeHTML(result.volunteer.study)}</div>
+                </div>
+              </div>
+              <div class="match-score">${result.score}%</div>
+            </div>
+            <div class="match-meter"><span style="width:${result.score}%"></span></div>
+            <div class="match-reasons">${escapeHTML(languageText)} (${result.languagePoints}/60 pts) · ${escapeHTML(interestText)} (${result.interestPoints}/40 pts)</div>
+            <div class="card-actions">
+              <button class="mini-action" data-assign="${escapeHTML(result.volunteer.id)}" ${isAssigned ? 'disabled' : ''}>${isAssigned ? 'Currently paired' : 'Pair this companion'}</button>
+            </div>
+          </article>`;
+      }).join('');
+    }
+
+    function resetSeniorForm() {
+      $('senior-form').reset();
+      $('senior-edit-id').value = '';
+      $('senior-form-title').textContent = 'Register a senior';
+      $('senior-submit').innerHTML = 'Save senior profile <span>→</span>';
+      $('senior-cancel').textContent = 'Clear form';
+    }
+
+    function editSenior(id) {
+      const senior = seniorById(id);
+      if (!senior) return;
+      $('senior-edit-id').value = senior.id;
+      $('senior-name').value = senior.name;
+      $('senior-age').value = senior.age;
+      $('senior-phone').value = senior.phone || '';
+      $('senior-area').value = senior.area;
+      $('senior-languages').value = (senior.languages || []).join(', ');
+      $('senior-conditions').value = senior.conditions || '';
+      $('senior-hobbies').value = (senior.hobbies || []).join(', ');
+      $('senior-contact-name').value = senior.contactName || '';
+      $('senior-contact-phone').value = senior.contactPhone || '';
+      $('senior-contact-relation').value = senior.contactRelation || '';
+      document.querySelectorAll('#senior-needs input').forEach(input => { input.checked = (senior.needs || []).includes(input.value); });
+      $('senior-consent').checked = true;
+      $('senior-form-title').textContent = 'Update senior profile';
+      $('senior-submit').innerHTML = 'Update profile <span>→</span>';
+      $('senior-cancel').textContent = 'Cancel edit';
+      $('senior-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $('senior-name').focus({ preventScroll: true });
+    }
+
+    async function deleteSenior(id) {
+      const senior = seniorById(id);
+      if (!senior) return;
+      const confirmed = await askConfirm('Remove senior profile?', `Remove ${senior.name}? Their check-in logs, help requests and companion pairing will also be removed.`, 'Remove profile');
+      if (!confirmed) return;
+      state.seniors = state.seniors.filter(item => item.id !== id);
+      state.checkins = state.checkins.filter(item => item.seniorId !== id);
+      state.requests = state.requests.filter(item => item.seniorId !== id);
+      delete state.assignments[id];
+      saveState(); renderAll(); showToast('Senior profile removed.');
+    }
+
+    function renderCheckins() {
+      const selectedSenior = $('log-filter-senior').value || 'All';
+      const logs = state.checkins.filter(log => selectedSenior === 'All' || log.seniorId === selectedSenior).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      $('log-total').textContent = logs.length;
+      $('checkin-list').innerHTML = logs.length ? logs.map(log => {
+        const senior = seniorById(log.seniorId);
+        const volunteer = volunteerById(log.volunteerId);
+        const isConcern = ['Anxious or worried', 'Low mood', 'Feeling lonely'].includes(log.emotion);
+        return `
+          <article class="log-card">
+            <div class="person-avatar">◷</div>
+            <div class="person-content">
+              <div class="person-name">${escapeHTML(senior?.name || 'Senior')} · ${escapeHTML(formatDate(log.date))}</div>
+              <div class="person-meta">Companion: ${escapeHTML(volunteer?.name || 'Volunteer')} · ${escapeHTML(log.duration)}</div>
+              <div class="log-flags">
+                <span class="tag ${isConcern ? 'coral' : ''}">${escapeHTML(log.emotion)}</span>
+                <span class="tag gray">${escapeHTML(log.health)}</span>
+                ${log.telehealth && log.telehealth !== 'None needed today' ? `<span class="tag amber">📱 ${escapeHTML(log.telehealth)}</span>` : ''}
+              </div>
+              <div class="log-note">${escapeHTML(log.notes)}</div>
+              <div class="person-meta">Follow-up: ${escapeHTML(log.followup || 'No follow-up noted')}</div>
+              <div class="card-actions"><button class="mini-action danger" data-delete-log="${escapeHTML(log.id)}">Delete log</button></div>
+            </div>
+          </article>`;
+      }).join('') : emptyState('No check-ins recorded', 'Use the form to save a weekly companion call and wellbeing note.');
+    }
+
+    function renderRequests() {
+      const status = $('request-filter').value;
+      const type = $('type-filter').value;
+      const requests = state.requests.filter(request => (status === 'All' || request.status === status) && (type === 'All' || request.type === type)).slice().sort((a, b) => String(b.created).localeCompare(String(a.created)));
+      $('request-total').textContent = requests.length;
+      $('request-list').innerHTML = requests.length ? requests.map(request => {
+        const senior = seniorById(request.seniorId);
+        const priorityClass = request.priority === 'High priority' ? 'coral' : request.priority === 'Time-sensitive' ? 'amber' : 'gray';
+        const statusClass = request.status === 'Completed' ? '' : 'amber';
+        const nextStatus = request.status === 'Open' ? 'In progress' : request.status === 'In progress' ? 'Completed' : 'Open';
+        const actionLabel = request.status === 'Completed' ? 'Reopen' : request.status === 'Open' ? 'Start task' : 'Mark complete';
+        return `
+          <article class="request-card">
+            <div class="request-top">
+              <div>
+                <div class="request-title">${escapeHTML(request.type)}</div>
+                <div class="person-meta">For ${escapeHTML(senior?.name || 'Senior')} · Added ${escapeHTML(formatDate(request.created))}</div>
+              </div>
+              <span class="tag ${priorityClass}">${escapeHTML(request.priority)}</span>
+            </div>
+            <p class="request-desc">${escapeHTML(request.details)}</p>
+            <div class="request-meta">Preferred date: ${escapeHTML(formatDate(request.due))} · Best time: ${escapeHTML(request.contact || 'Any time')}</div>
+            <div class="request-foot">
+              <span class="tag ${statusClass}">${escapeHTML(request.status)}</span>
+              <div class="card-actions" style="margin-top:0;">
+                <button class="mini-action" data-request-status="${escapeHTML(request.id)}" data-next-status="${escapeHTML(nextStatus)}">${actionLabel}</button>
+                <button class="mini-action danger" data-delete-request="${escapeHTML(request.id)}">Remove</button>
+              </div>
+            </div>
+          </article>`;
+      }).join('') : emptyState('No requests in this view', 'Create a help request or choose a different filter.');
+    }
+
+    function updateRequestStatus(id, status) {
+      const request = state.requests.find(item => item.id === id);
+      if (!request) return;
+      request.status = status;
+      saveState(); renderAll(); showToast(`Request updated: ${status}.`);
+    }
+
+    async function deleteRequest(id) {
+      const request = state.requests.find(item => item.id === id);
+      if (!request) return;
+      if (!await askConfirm('Remove this help request?', 'This request will be permanently removed.', 'Remove request')) return;
+      state.requests = state.requests.filter(item => item.id !== id);
+      saveState(); renderAll(); showToast('Help request removed.');
+    }
+
+    async function deleteCheckin(id) {
+      if (!await askConfirm('Delete this check-in log?', 'This weekly call record will be removed.', 'Delete log')) return;
+      state.checkins = state.checkins.filter(item => item.id !== id);
+      saveState(); renderAll(); showToast('Check-in log deleted.');
+    }
+
+    function safePhone(phone) {
+      const value = String(phone || '').trim();
+      const digits = value.replace(/[^\d]/g, '');
+      if (digits.length < 7 || digits.length > 15) return '';
+      return `tel:${value.replace(/[^\d+]/g, '')}`;
+    }
+
+    function renderSafety() {
+      const checks = state.safetyChecks || {};
+      document.querySelectorAll('[data-safety-check]').forEach(input => { input.checked = Boolean(checks[input.dataset.safetyCheck]); });
+      const contacts = state.seniors.filter(senior => senior.contactName || senior.contactPhone);
+      $('safety-contacts').innerHTML = contacts.length ? contacts.map(senior => {
+        const phone = safePhone(senior.contactPhone);
+        return `
+          <article class="contact-card">
+            <div class="person-avatar">${escapeHTML(initials(senior.name))}</div>
+            <div class="person-content">
+              <div class="person-name">${escapeHTML(senior.contactName || 'Trusted contact')} <span class="tag gray">${escapeHTML(senior.name)}</span></div>
+              <div class="person-meta">${escapeHTML(senior.contactRelation || 'Relationship not specified')}<br>${escapeHTML(senior.contactPhone || 'Phone number not provided')}</div>
+              <div class="card-actions">
+                ${phone ? `<a class="mini-action" href="${escapeHTML(phone)}">📞 Call contact</a>` : '<span class="tag amber">No callable number</span>'}
+                <button class="mini-action" data-edit-senior="${escapeHTML(senior.id)}">Update details</button>
+              </div>
+            </div>
+          </article>`;
+      }).join('') : emptyState('No trusted contacts added', 'Add an emergency contact in a senior profile to display them here.');
+    }
+
+    /* Helpline Modal & Paramedic Card */
+    function renderHelplineModal() {
+      const select = $('helpline-senior-select');
+      if (!state.seniors.length) {
+        select.innerHTML = '<option value="">No seniors registered</option>';
+        $('helpline-paramedic-details').innerHTML = '<div>Register a senior profile to generate a quick responder card.</div>';
+        return;
+      }
+      const prev = select.value;
+      select.innerHTML = state.seniors.map(s => `<option value="${escapeHTML(s.id)}">${escapeHTML(s.name)} (${escapeHTML(s.age)} yrs)</option>`).join('');
+      if (state.seniors.some(s => s.id === prev)) select.value = prev;
+      updateParamedicDetails();
+    }
+
+    function updateParamedicDetails() {
+      const senior = seniorById($('helpline-senior-select').value) || state.seniors[0];
+      if (!senior) return;
+      $('helpline-paramedic-details').innerHTML = `
+        <div><strong>Senior Citizen</strong>${escapeHTML(senior.name)}, Age ${escapeHTML(senior.age)}</div>
+        <div><strong>Area</strong>${escapeHTML(senior.area)}</div>
+        <div><strong>Medical Notes</strong>${escapeHTML(senior.conditions || 'None listed')}</div>
+        <div><strong>Emergency Contact</strong>${escapeHTML(senior.contactName || 'Not set')} (${escapeHTML(senior.contactPhone || 'No phone')})</div>
+      `;
+    }
+
+    function exportData() {
+      const payload = { project: 'Kindred Care — Senior Companion & Support Desk', exportedAt: new Date().toISOString(), data: state };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `kindred-care-backup-${todayISO()}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      showToast('Local data backup exported.');
+    }
+
+    async function resetDemo() {
+      if (!await askConfirm('Restore sample data?', 'This replaces current browser data with original sample profiles, logs and requests.', 'Restore demo')) return;
+      state = clone(SAMPLE_DATA);
+      saveState();
+      resetSeniorForm();
+      $('checkin-form').reset();
+      $('request-form').reset();
+      $('log-date').value = todayISO();
+      renderAll();
+      showToast('Sample data restored.');
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('[data-page]').forEach(button => button.addEventListener('click', () => go(button.dataset.page)));
+      document.querySelectorAll('[data-navigate]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); go(link.dataset.navigate); }));
+
+      document.querySelectorAll('.a11y-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyFontScale(btn.dataset.scale));
+      });
+
+      $('mobile-menu').addEventListener('click', () => $('sidebar').classList.contains('open') ? closeMobileNav() : openMobileNav());
+      $('mobile-scrim').addEventListener('click', closeMobileNav);
+
+      $('topbar-helpline-btn').addEventListener('click', () => openModal('helpline-modal'));
+      $('sidebar-open-helpline').addEventListener('click', () => openModal('helpline-modal'));
+      $('safety-launch-modal').addEventListener('click', () => openModal('helpline-modal'));
+
+      document.querySelectorAll('[data-close-modal]').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
+      });
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.addEventListener('click', e => { if (e.target === backdrop) backdrop.classList.remove('open'); });
+      });
+
+      $('helpline-senior-select').addEventListener('change', updateParamedicDetails);
+      $('simulate-care-call').addEventListener('click', () => {
+        const status = $('care-call-status');
+        status.hidden = false;
+        status.innerHTML = '<strong>Connected to Night Care Coordinator (Simran):</strong> "Hello! We have your profile open and are staying on the line with you. Would you like us to notify your family contact?"';
+      });
+
+      $('export-data').addEventListener('click', exportData);
+      $('reset-demo').addEventListener('click', resetDemo);
+
+      $('senior-search').addEventListener('input', renderSeniors);
+      $('match-senior').addEventListener('change', renderMatches);
+      $('log-filter-senior').addEventListener('change', renderCheckins);
+      $('request-filter').addEventListener('change', renderRequests);
+      $('type-filter').addEventListener('change', renderRequests);
+
+      $('log-senior').addEventListener('change', () => {
+        const assigned = state.assignments[$('log-senior').value];
+        if (assigned) $('log-volunteer').value = assigned;
+      });
+
+      $('senior-cancel').addEventListener('click', event => {
+        if ($('senior-edit-id').value) { event.preventDefault(); resetSeniorForm(); }
+      });
+
+      $('senior-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const id = $('senior-edit-id').value;
+        const senior = {
+          id: id || `s${Date.now()}`,
+          name: $('senior-name').value.trim(),
+          age: Number($('senior-age').value),
+          phone: $('senior-phone').value.trim(),
+          area: $('senior-area').value.trim(),
+          languages: splitList($('senior-languages').value),
+          conditions: $('senior-conditions').value.trim(),
+          hobbies: splitList($('senior-hobbies').value),
+          needs: selectedNeeds(),
+          contactName: $('senior-contact-name').value.trim(),
+          contactPhone: $('senior-contact-phone').value.trim(),
+          contactRelation: $('senior-contact-relation').value.trim()
+        };
+        const existingIndex = state.seniors.findIndex(item => item.id === id);
+        if (existingIndex >= 0) state.seniors[existingIndex] = senior;
+        else state.seniors.unshift(senior);
+        saveState();
+        resetSeniorForm();
+        renderAll();
+        $('match-senior').value = senior.id;
+        showToast(existingIndex >= 0 ? 'Senior profile updated.' : 'Senior profile saved.');
+      });
+
+      $('checkin-form').addEventListener('submit', event => {
+        event.preventDefault();
+        state.checkins.unshift({
+          id: `c${Date.now()}`,
+          seniorId: $('log-senior').value,
+          volunteerId: $('log-volunteer').value,
+          date: $('log-date').value,
+          duration: $('log-duration').value,
+          telehealth: $('log-telehealth').value,
+          emotion: $('log-emotion').value,
+          health: $('log-health').value,
+          notes: $('log-notes').value.trim(),
+          followup: $('log-followup').value
+        });
+        saveState();
+        $('checkin-form').reset();
+        $('log-date').value = todayISO();
+        renderAll();
+        showToast('Weekly check-in saved.');
+      });
+
+      $('request-form').addEventListener('submit', event => {
+        event.preventDefault();
+        state.requests.unshift({
+          id: `r${Date.now()}`,
+          seniorId: $('req-senior').value,
+          type: $('req-type').value,
+          priority: $('req-priority').value,
+          details: $('req-details').value.trim(),
+          due: $('req-due').value,
+          contact: $('req-contact').value,
+          status: 'Open',
+          created: todayISO()
+        });
+        saveState();
+        $('request-form').reset();
+        renderAll();
+        showToast('Assistance request posted.');
+      });
+
+      $('senior-list').addEventListener('click', event => {
+        const edit = event.target.closest('[data-edit-senior]');
+        const match = event.target.closest('[data-match-senior]');
+        const remove = event.target.closest('[data-delete-senior]');
+        if (edit) editSenior(edit.dataset.editSenior);
+        if (match) { go('matching'); $('match-senior').value = match.dataset.matchSenior; renderMatches(); }
+        if (remove) deleteSenior(remove.dataset.deleteSenior);
+      });
+
+      $('match-output').addEventListener('click', event => {
+        const button = event.target.closest('[data-assign]');
+        if (!button) return;
+        const seniorId = $('match-senior').value;
+        const volunteer = volunteerById(button.dataset.assign);
+        const senior = seniorById(seniorId);
+        if (!senior || !volunteer) return;
+        state.assignments[seniorId] = volunteer.id;
+        saveState(); renderMatches(); renderSeniors();
+        showToast(`${volunteer.name} paired with ${senior.name}.`);
+      });
+
+      $('checkin-list').addEventListener('click', event => {
+        const button = event.target.closest('[data-delete-log]');
+        if (button) deleteCheckin(button.dataset.deleteLog);
+      });
+
+      $('request-list').addEventListener('click', event => {
+        const status = event.target.closest('[data-request-status]');
+        const remove = event.target.closest('[data-delete-request]');
+        if (status) updateRequestStatus(status.dataset.requestStatus, status.dataset.nextStatus);
+        if (remove) deleteRequest(remove.dataset.deleteRequest);
+      });
+
+      $('safety-contacts').addEventListener('click', event => {
+        const button = event.target.closest('[data-edit-senior]');
+        if (button) { go('seniors'); editSenior(button.dataset.editSenior); }
+      });
+
+      document.querySelectorAll('[data-safety-check]').forEach(input => {
+        input.addEventListener('change', () => {
+          state.safetyChecks[input.dataset.safetyCheck] = input.checked;
+          saveState();
+        });
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeMobileNav();
+          closeModal('helpline-modal');
+        }
+      });
+    }
+
+    function initialise() {
+      const savedScale = localStorage.getItem(SCALE_KEY);
+      if (savedScale) applyFontScale(savedScale);
+      $('log-date').value = todayISO();
+      bindEvents();
+      renderAll();
+    }
+
+    document.addEventListener('DOMContentLoaded', initialise);
+  </script>
+</body>
+</html>
